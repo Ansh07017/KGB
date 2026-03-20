@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Knowledge Graph Builder Dashboard</title>
+    
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="chat-container">
+        <div class="chat-header">Enterprise IT Support Assistant</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">Hello! I am your AI IT Assistant. I have context on your enterprise support tickets. How can I help you today?</div>
+        </div>
+        
+        <div class="loader" id="loadingIndicator">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="E.g., laptop not turning on..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <div class="graph-container">
+        <div class="graph-header">Interactive Knowledge Graph Explorer</div>
+        <div id="mynetwork"></div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>

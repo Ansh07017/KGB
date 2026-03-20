@@ -1,0 +1,26 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; display: flex; height: 100vh; background-color: #1e1e1e; color: #fff; }
+.container { display: flex; width: 100%; }
+
+/* Left Column: Chat */
+.chat-container { width: 35%; border-right: 1px solid #333; display: flex; flex-direction: column; background-color: #252526; }
+.chat-header { padding: 20px; background-color: #333; font-weight: bold; border-bottom: 1px solid #444; font-size: 1.2rem; }
+.chat-messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+.message { padding: 12px 16px; border-radius: 8px; max-width: 85%; line-height: 1.5; font-size: 0.95rem; }
+.user-message { background-color: #007acc; align-self: flex-end; }
+.bot-message { background-color: #3e3e42; align-self: flex-start; border: 1px solid #555; white-space: pre-wrap; }
+.chat-input-area { padding: 20px; border-top: 1px solid #333; display: flex; gap: 10px; background-color: #2d2d30; }
+input[type="text"] { flex-grow: 1; padding: 12px; border-radius: 4px; border: 1px solid #555; background-color: #1e1e1e; color: white; outline: none; }
+button { padding: 12px 20px; background-color: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+button:hover { background-color: #005f9e; }
+
+/* Right Column: Graph */
+.graph-container { width: 65%; display: flex; flex-direction: column; }
+.graph-header { padding: 20px; background-color: #333; font-weight: bold; border-bottom: 1px solid #444; font-size: 1.2rem; }
+#mynetwork { flex-grow: 1; width: 100%; height: 100%; background-color: #1e1e1e; }
+
+/* Loading Animation */
+.loader { display: none; align-self: flex-start; margin-left: 10px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: #aaa; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both; }
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
