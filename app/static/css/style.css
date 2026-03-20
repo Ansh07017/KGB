@@ -14,119 +14,165 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* --- 1. THE 20/70/10 VERTICAL SHELL --- */
+/* =========================
+   1. GLOBAL LAYOUT (25/60/15)
+========================= */
 body { 
     background-color: var(--dark-bg); 
     color: var(--stark-white); 
     font-family: 'Inter', sans-serif; 
+    
     height: 100vh;
     width: 100vw;
+
     display: grid;
-    grid-template-rows: 20vh 70vh 10vh;
+    grid-template-rows: 18vh 72vh 10vh; /* ✅ FIXED */
+
     overflow: hidden; 
     background-image: radial-gradient(circle at 50% 50%, #1a0505 0%, #000000 100%); 
 }
 
-/* --- 2. LOADER OVERLAY --- */
-#loader-overlay {
-    position: fixed;
-    inset: 0;
-    background: var(--dark-bg);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.loader-spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid rgba(255, 51, 51, 0.1);
-    border-top: 3px solid var(--neon-red);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin { 100% { transform: rotate(360deg); } }
-
-/* --- 3. HEADER & "SCREAMING" KPI CARDS --- */
+/* =========================
+   2. HEADER
+========================= */
 .main-header {
     padding: 0 40px;
     background: rgba(10, 2, 2, 0.7);
     backdrop-filter: blur(25px);
     border-bottom: 1px solid var(--border-glow);
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto;
     justify-content: space-between;
+    align-items: left;
+    height: 100%;
+    white-space: nowrap;
+}
+
+.header-content {
+    display: flex;
     align-items: center;
+    gap: 20px;
+    max-width: fit-content;
+}
+
+.kpi-section {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    align-items: center;
+    justify-self: end;
 }
 
 .kgb-icon {
     font-family: 'Playfair Display', serif;
-    font-size: 3.2rem;
+    font-size: 3rem;
     font-weight: 700;
     font-style: italic;
     color: var(--neon-red);
     text-shadow: 0 0 20px rgba(255, 50, 50, 0.8);
-    letter-spacing: -2px;
 }
-
-.kpi-section { display: flex; gap: 30px; }
 
 .kpi-card {
     background: var(--panel-grey);
     backdrop-filter: blur(10px);
     border: 1px solid var(--border-glow);
     border-radius: 12px;
-    padding: 15px 25px;
-    min-width: 180px;
+    padding: 12px 20px;
+    min-width: 150px;
     display: flex;
     align-items: center;
-    gap: 15px;
-    transition: 0.3s transform ease;
+    gap: 10px;
+    height: 80px;
+    transition: 0.3s ease;
 }
 
-.kpi-card:hover { transform: translateY(-5px); border-color: var(--neon-red); }
+.kpi-card:hover { 
+    transform: translateY(-5px); 
+    border-color: var(--neon-red); 
+}
 
-.kpi-icon { font-size: 1.8rem; }
+.kpi-icon { font-size: 1.5rem; }
 
 .kpi-value { 
     font-family: 'Orbitron', sans-serif; 
-    font-size: 1.8rem; 
+    font-size: 1.5rem; 
     color: var(--neon-red); 
-    line-height: 1;
 }
 
-.kpi-label { font-size: 0.7rem; color: #bbb; text-transform: uppercase; letter-spacing: 2px; }
+.kpi-label { 
+    font-size: 0.65rem; 
+    color: #bbb; 
+    text-transform: uppercase; 
+}
 
-/* --- 4. MAIN AREA (30/70 SPLIT) --- */
-.main-stage { display: flex; padding: 20px; gap: 20px; }
 
+/* =========================
+   3. MAIN AREA (30/70)
+========================= */
+.main-stage { 
+    display: flex; 
+    padding: 20px; 
+    gap: 20px; 
+    height: 100%;
+}
+
+/* PANELS */
 .glass-panel { 
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
     border: 1px solid var(--border-glow);
     border-radius: 16px;
+
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
-.chat-container { flex: 0 0 30%; }
-.graph-container { flex: 1; position: relative; background: rgba(0,0,0,0.4); }
+/* LEFT: CHAT */
+.chat-container { 
+    flex: 0 0 30%; 
+}
 
+.chat-messages {
+    padding: 15px 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.message {
+    border: none !important;
+    background: transparent;
+    padding: 8px 0;
+}
+/* RIGHT: GRAPH */
+.graph-container { 
+    flex: 0 0 70%; 
+    position: relative; 
+    background: rgba(0,0,0,0.4); 
+}
+
+/* PANEL HEADER */
 .panel-header {
     padding: 15px 20px;
     background: rgba(255, 50, 50, 0.15);
     border-bottom: 1px solid var(--border-glow);
     font-weight: 700;
     color: var(--neon-red);
+
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* Graph Search UI */
+/* =========================
+   4. GRAPH AREA
+========================= */
+#mynetwork {
+    flex: 1;
+    height: 100%;
+}
+
+/* SEARCH BAR */
 .graph-search-wrapper input {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 51, 51, 0.3);
@@ -138,29 +184,61 @@ body {
     width: 180px;
 }
 
-/* --- 5. GRAPH LEGEND (CURVED RECTANGLE) --- */
+/* LEGEND */
 #graph-legend {
     position: absolute;
-    bottom: 25px;
-    left: 25px;
-    padding: 15px;
-    border-radius: 12px;
+    bottom: 15px;
+    left: 15px;
+    width: 100px;
+    height: 160px;
+    padding: 6px 8px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    z-index: 10;
+    justify-content: center;
+    gap: 4px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255, 51, 51, 0.3);
+    overflow: hidden;
 }
 
-.legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
-.legend-dot { width: 12px; height: 12px; border-radius: 50%; }
-.ticket { background: var(--neon-red); box-shadow: 0 0 8px var(--neon-red); }
-.server { background: var(--server-blue); box-shadow: 0 0 8px var(--server-blue); }
-.user { background: var(--user-green); box-shadow: 0 0 8px var(--user-green); }
+.legend-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 0.85rem; 
+}
+.legend-header{
+    display: flex;
+    gap: 15px;
+    text-align: center;
+    font-size: 1.1rem; 
+    font-family: Arial;
+}
 
-/* --- 6. CHAT INPUT & STARK BUTTON --- */
-.chat-input-area { padding: 20px; border-top: 1px solid var(--border-glow); gap: 12px; }
+.legend-dot { 
+    width: 12px; 
+    height: 12px; 
+    border-radius: 50%;
+}
+
+.ticket { background: var(--neon-red); }
+.server { background: var(--server-blue); }
+.user { background: var(--user-green); }
+.issue { background: #f4f02a; }
+.device { background: #49ccd7; }
+.other { background: #a76161; }
+
+/* =========================
+   5. CHAT INPUT
+========================= */
+.chat-input-area { 
+    padding: 20px; 
+    border-top: 1px solid var(--border-glow); 
+}
 
 #userInput {
+    width: 100%;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.2);
     border-radius: 6px;
@@ -169,30 +247,33 @@ body {
     margin-bottom: 10px;
 }
 
-/* Updated Placeholder */
-#userInput::placeholder { color: rgba(255,255,255,0.4); font-style: normal; }
+#userInput::placeholder { 
+    color: rgba(255,255,255,0.4); 
+}
 
 .analyze-btn {
+    width: 100%;
     background: var(--stark-white);
     color: black;
     padding: 12px;
     border-radius: 4px;
     font-family: 'Orbitron', sans-serif;
     font-weight: 900;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: 0.3s;
 }
+
 
 .analyze-btn:hover {
     background: var(--neon-red);
     color: white;
-    transform: scale(1.02);
-    box-shadow: 0 0 30px var(--neon-red);
+    box-shadow: 0 0 20px var(--neon-red);
 }
 
-/* --- 7. FOOTER & CENTERED TEXT --- */
+/* =========================
+   6. FOOTER
+========================= */
 .main-footer {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     border-top: 1px solid var(--border-glow);
@@ -200,5 +281,15 @@ body {
 }
 
 .footer-center { text-align: center; }
-.dev-name { color: var(--neon-red); font-weight: bold; font-size: 1.4rem; }
-.copyright { opacity: 0.5; font-size: 0.7rem; margin-top: 4px; }
+
+.dev-name { 
+    color: var(--neon-red); 
+    font-weight: bold; 
+    font-size: 1.2rem; 
+}
+
+.copyright { 
+    opacity: 0.5; 
+    font-size: 0.7rem; 
+    margin-top: 4px; 
+}

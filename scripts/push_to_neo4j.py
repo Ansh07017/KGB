@@ -16,15 +16,34 @@ URI = os.getenv("db_Url")
 USERNAME = os.getenv("NEO4J_USERNAME")
 PASSWORD = os.getenv("NEO4J_PASSWORD")
 
-driver = GraphDatabase.driver(URI, auth=(USERNAME, PASSWORD))
+driver = GraphDatabase.driver(URI, auth=(USERNAME, PASSWORD),encrypted=True)
+
+def get_label(name):
+    name = name.lower()
+
+    if "ticket" in name:
+        return "Ticket"
+    elif "server" in name:
+        return "Server"
+    elif "user" in name:
+        return "User"
+    elif "issue" in name or "error" in name:
+        return "Issue"
+    elif "laptop" in name or "printer" in name or "tv" in name or "phone" in name or "camera" in name or "switch" in name or "dell" in name or "monitor" in name or "controller" in name:
+        return "Device"
+    else:
+        return "Entity"
 
 def create_relationship(tx, subject, predicate, obj):
 
     predicate = predicate.replace(" ", "_")
 
+    label_a = get_label(subject)
+    label_b = get_label(obj)
+
     query = f"""
-    MERGE (a:Entity {{name:$subject}})
-    MERGE (b:Entity {{name:$object}})
+    MERGE (a:{label_a} {{name:$subject}})
+    MERGE (b:{label_b} {{name:$object}})
     MERGE (a)-[:{predicate}]->(b)
     """
 

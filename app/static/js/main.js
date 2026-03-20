@@ -99,7 +99,6 @@ async function loadGraph() {
 
         // DYNAMIC SCALING & COLOR-CODING LOGIC
         const styledNodes = data.nodes.map(node => {
-            // Calculate Degree Centrality (how important the node is)
             const connections = data.edges.filter(e => e.from === node.id || e.to === node.id).length;
             
             // Set dynamic size based on importance
@@ -107,16 +106,22 @@ async function loadGraph() {
             const dynamicSize = baseSize + (connections * 2.5);
 
             // Assign colors based on node group/label
-            let colorSettings = { background: '#ffffff', border: '#888888' }; // Default
-            
-            if (node.group === 'Ticket') {
-                colorSettings = { background: '#ff3333', border: '#990000' };
-            } else if (node.group === 'Server') {
-                colorSettings = { background: '#3388ff', border: '#003399' };
-            } else if (node.group === 'User') {
-                colorSettings = { background: '#33ff88', border: '#009933' };
-            }
+            const COLORS = {
+    ticket: '#ff3333',
+    server: '#3388ff',
+    user: '#33ff88',
+    issue: '#f4f02a',
+    device: '#49ccd7',
+    other: '#a76161'
+};
+let group = node.group?.toLowerCase();
 
+let bg = COLORS[group] || COLORS['other'];
+
+let colorSettings = {
+    background: bg,
+    border: bg   // 🔥 SAME COLOR → no mismatch
+};
             return {
                 ...node,
                 size: dynamicSize,
@@ -124,7 +129,9 @@ async function loadGraph() {
                     ...colorSettings, 
                     highlight: { background: '#fff', border: '#ff3333' } 
                 },
-                font: { color: '#ffffff', size: connections > 3 ? 14 : 10 }
+                font: {
+    color: '#cccccc'
+                }
             };
         });
 
@@ -136,7 +143,7 @@ async function loadGraph() {
             nodes: {
                 shape: 'dot',
                 borderWidth: 2,
-                shadow: { enabled: true, color: 'rgba(255,0,0,0.3)', size: 8 }
+                shadow: false
             },
             edges: {
                 width: 1.2,
@@ -145,17 +152,17 @@ async function loadGraph() {
                 smooth: { type: 'continuous', roundness: 0.5 }
             },
             physics: {
-                enabled: true,
-                forceAtlas2Based: {
-                    gravitationalConstant: -200, // Stronger repulsion to fix overlapping
-                    centralGravity: 0.01,
-                    springLength: 100,
-                    springConstant: 0.08,
-                    damping: 0.4
-                },
-                solver: 'forceAtlas2Based',
-                stabilization: { iterations: 200, updateInterval: 25 }
-            },
+    enabled: true,
+    forceAtlas2Based: {
+        gravitationalConstant: -500,   // 🔥 stronger repulsion
+        centralGravity: 0.003,
+        springLength: 180,             // 🔥 more spacing
+        springConstant: 0.04,
+        damping: 0.6
+    },
+    solver: 'forceAtlas2Based',
+    stabilization: { iterations: 300 }
+},
             interaction: { hover: true, tooltipDelay: 200, hideEdgesOnDrag: true }
         };
 

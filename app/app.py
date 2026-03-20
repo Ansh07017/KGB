@@ -27,6 +27,9 @@ groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 URI = os.getenv("db_Url")
 USERNAME = os.getenv("NEO4J_USERNAME")
 PASSWORD = os.getenv("NEO4J_PASSWORD")
+print("USERNAME:", [c for c in USERNAME])
+print("PASSWORD:", [c for c in PASSWORD])
+print("URI:", [c for c in URI])
 driver = GraphDatabase.driver(URI, auth=(USERNAME, PASSWORD))
 
 # FAISS & Sentence Transformers

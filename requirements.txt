@@ -1,0 +1,9 @@
+flask
+python-dotenv
+neo4j
+pandas
+numpy
+sentence-transformers
+faiss-cpu
+groq
+openpyxl
