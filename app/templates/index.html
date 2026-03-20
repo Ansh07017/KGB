@@ -3,38 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Knowledge Graph Builder Dashboard</title>
-    
+    <title>KGB Enterprise Intelligence</title>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <div class="chat-container">
-        <div class="chat-header">Enterprise IT Support Assistant</div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="message bot-message">Hello! I am your AI IT Assistant. I have context on your enterprise support tickets. How can I help you today?</div>
-        </div>
-        
-        <div class="loader" id="loadingIndicator">
-            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        </div>
-
-        <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="E.g., laptop not turning on..." onkeypress="handleKeyPress(event)">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-    </div>
-
-    <div class="graph-container">
-        <div class="graph-header">Interactive Knowledge Graph Explorer</div>
-        <div id="mynetwork"></div>
+<div id="loader-overlay">
+    <div class="loader-content">
+        <div class="kgb-icon">KGB</div>
+        <div class="loader-spinner"></div>
+        <p>SYNCHRONIZING KNOWLEDGE GRAPH...</p>
     </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<header class="main-header glass-panel">
+    <div class="header-content">
+        <div class="kgb-icon">KGB</div>
+        <div class="header-titles">
+            <h1>ENTERPRISE INTELLIGENCE</h1>
+            <h2>Knowledge Graph Builder</h2>
+        </div>
+    </div>
 
+    <section class="kpi-section">
+        <div class="kpi-card glass-panel">
+            <span class="kpi-icon">💠</span>
+            <div class="kpi-value">172</div>
+            <div class="kpi-label">Entities</div>
+        </div>
+        <div class="kpi-card glass-panel">
+            <span class="kpi-icon">🔗</span>
+            <div class="kpi-value">215</div>
+            <div class="kpi-label">Relationships</div>
+        </div>
+        <div class="kpi-card glass-panel status-card">
+            <span class="kpi-icon">⚡</span>
+            <div class="kpi-value glow-text">Online</div>
+            <div class="kpi-label">Llama 3.1</div>
+        </div>
+    </section>
+</header>
+
+<main class="main-stage">
+    
+    <div class="glass-panel chat-container">
+        <div class="panel-header">Intelligent Agent</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">Neural interface active. How can I assist?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Query neural network (e.g. 'Network issues')..." onkeypress="handleKeyPress(event)">
+            <button class="analyze-btn" onclick="sendMessage()">Analyze</button>
+        </div>
+    </div>
+
+    <div class="glass-panel graph-container">
+        <div class="panel-header">
+            Knowledge Graph Explorer
+            <div class="graph-search-wrapper">
+                <input type="text" id="graphSearch" placeholder="Find entity..." oninput="searchNode()">
+            </div>
+        </div>
+        
+        <div id="mynetwork"></div>
+
+        <div id="mini-intel-box" class="mini-box hidden">
+            <span id="entity-name-display"></span>
+        </div>
+
+        <div id="graph-legend" class="glass-panel">
+            <div class="legend-item"><span class="legend-dot ticket"></span> Ticket</div>
+            <div class="legend-item"><span class="legend-dot server"></span> Server</div>
+            <div class="legend-item"><span class="legend-dot user"></span> User</div>
+        </div>
+    </div>
+
+</main>
+
+<footer class="main-footer glass-panel">
+    <div class="footer-center">
+        <div class="developers">
+            A System Developed by: <span class="dev-name">Ansh</span> & <span class="dev-name">Satwik</span>
+        </div>
+        <p class="copyright">© 2026. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
