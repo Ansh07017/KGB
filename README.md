@@ -7,7 +7,7 @@
 [![Groq](https://img.shields.io/badge/Groq_API-f55036?style=for-the-badge&logo=groq&logoColor=white)]()
 [![Llama 3.1](https://img.shields.io/badge/Llama_3.1-0467df?style=for-the-badge&logo=meta&logoColor=white)]()
 
-![KGB Enterprise Dashboard](assets/Screenshot%202026-03-21%20194256.png.jpg)
+![KGB Enterprise Dashboard](assets/preview.png)
 
 ---
 
@@ -15,7 +15,7 @@
 
 This project builds an enterprise-level **AI-powered Knowledge Graph system** from structured and unstructured customer support data. 
 
-[cite_start]The system extracts entities and relationships from support tickets, constructs a **dynamic knowledge graph** [cite: 7][cite_start], and enables **intelligent semantic search with a Retrieval-Augmented Generation (RAG) pipeline**. [cite_start]By moving completely to the cloud, it provides high-speed automated troubleshooting responses via an interactive graph dashboard[cite: 9].
+The system extracts entities and relationships from support tickets, constructs a **dynamic knowledge graph**, and enables **intelligent semantic search with a Retrieval-Augmented Generation (RAG) pipeline**. By moving completely to the cloud, it provides high-speed automated troubleshooting responses via an interactive graph dashboard.
 
 ---
 
@@ -23,10 +23,10 @@ This project builds an enterprise-level **AI-powered Knowledge Graph system** fr
 
 To transform enterprise support ticket data into a scalable, cloud-native knowledge graph that enables:
 
-- [cite_start]**Relationship-based analysis** to uncover hidden connections[cite: 4].
+- **Relationship-based analysis** to uncover hidden connections.
 - **Intelligent troubleshooting** driven by high-speed LLM inference.
-- [cite_start]**Semantic search** over vast amounts of support tickets.
-- [cite_start]**AI-assisted IT support responses** for actionable intelligence[cite: 10].
+- **Semantic search** over vast amounts of support tickets.
+- **AI-assisted IT support responses** for actionable intelligence.
 
 ---
 
@@ -53,97 +53,114 @@ Vector Database (FAISS)
       ↓
 Semantic Search
       ↓
-Retrieval-Augmented Generation (Groq API + Llama 3.1)```
+Retrieval-Augmented Generation (Groq API + Llama 3.1)
+```
 
 ---
 
 # 🚀 Technologies Used
 
-Python & Pandas (Data Processing)
-Sentence Transformers & FAISS (Vector Database & Embeddings)
-Groq API / Llama 3.1 (High-Speed Cloud LLM for Intelligent Assistant)
-Neo4j AuraDB (Cloud Graph Database)
-Flask (Backend API)
-Vis.js (Frontend Graph Visualization)
-GitHub (Version Control)
+- **Python & Pandas** (Data Processing)
+- **Sentence Transformers & FAISS** (Vector Database & Embeddings)
+- **Groq API / Llama 3.1** (High-Speed Cloud LLM for Intelligent Assistant)
+- **Neo4j AuraDB** (Cloud Graph Database)
+- **Flask** (Backend API)
+- **Vis.js** (Frontend Graph Visualization)
+- **GitHub** (Version Control)
+
+---
 
 # ✅ Milestone 1 – Data Ingestion & Preprocessing
-## Tasks Completed
-Data cleaning using Pandas.
 
-Removal of null values and duplicates.
+### Tasks Completed
+- Data cleaning using Pandas.
+- Removal of null values and duplicates.
+- Data normalization and feature enrichment.
+- Processed dataset generation.
 
-Data normalization and feature enrichment.
-
-Processed dataset generation.
-
-Output
-
+### Output
+```text
 cleaned_tickets.xlsx
-# ✅ Milestone 2 – Entity Extraction & Graph Construction
-## Step 1: Structured Triple Extraction
-Extracted entity–relationship–entity triples from structured columns.
-Example triples:
+```
 
+---
+
+# ✅ Milestone 2 – Entity Extraction & Graph Construction
+
+## Step 1: Structured Triple Extraction
+Extracted **entity–relationship–entity triples** from structured columns.
+*Example triples:*
+```text
 Customer → RAISED → Ticket
 Ticket → HAS_SEVERITY → Severity
 Ticket → SUBMITTED_VIA → Channel
-Output: structured_triples.csv
+```
+**Output:** `structured_triples.csv`
 
 ## Step 2: LLM-Based NER
 Used LLMs to extract semantic relationships from raw ticket descriptions.
-Example triples:
-
+*Example triples:*
+```text
 (Dell XPS, EXPERIENCING, Not turning on)
 (Dell XPS, REQUIRED_ACTION, Troubleshoot power issues)
-Output: llm_triples.csv
+```
+**Output:** `llm_triples.csv`
 
 ## Step 3: Graph Construction (Neo4j Cloud)
+- Combined structured and LLM-generated triples.
+- Inserted triples into **Neo4j AuraDB** using the Python Neo4j driver.
+- Constructed graph nodes and relationships.
 
-Combined structured and LLM-generated triples.
-Inserted triples into Neo4j AuraDB using the Python Neo4j driver.
-Constructed graph nodes and relationships.
-
-Graph Statistics
-Plaintext
+### Graph Statistics
+```text
 Graph Statistics (Sample Run – First 20 Rows)
-Nodes: ~164+
-Relationships: ~300+
+Nodes: ~160+
+Relationships: ~240+
 
 Note: Running the pipeline on the full dataset generates a significantly larger, interconnected knowledge graph.
+```
+
 ## Step 4: Graph Validation
 Validated graph integrity using Cypher queries directly in the cloud.
 
-Count Nodes & Relationships:
-
+*Count Nodes & Relationships:*
+```cypher
 MATCH (n) RETURN count(n);
 MATCH ()-[r]->() RETURN count(r);
+```
+
+---
 
 # ✅ Milestone 3 – Semantic Search & RAG Pipeline
+
 ## Objective
-Enable intelligent search and automated troubleshooting responses by integrating semantic search with a Retrieval-Augmented Generation (RAG) pipeline.
+Enable intelligent search and automated troubleshooting responses by integrating **semantic search** with a **Retrieval-Augmented Generation (RAG) pipeline**.
 
 ## Step 1: Embedding Generation
-Ticket descriptions were converted into vector embeddings using all-MiniLM-L6-v2. This allows the system to understand semantic similarity.
-
-Example: Even if a ticket says "Device fails to power on", it successfully retrieves matches for the user query "laptop not turning on".
+Ticket descriptions were converted into **vector embeddings** using `all-MiniLM-L6-v2`. This allows the system to understand **semantic similarity**.
+> *Example:* Even if a ticket says *"Device fails to power on"*, it successfully retrieves matches for the user query *"laptop not turning on"*.
 
 ## Step 2: Vector Database (FAISS)
-Embeddings were stored in a FAISS vector database for rapid similarity search.
+Embeddings were stored in a **FAISS vector database** for rapid similarity search.
 | File | Description |
 |-----|-------------|
-| vector_index.faiss | Stores ticket embeddings |
-| ticket_texts.pkl | Stores ticket descriptions mapped to vectors |
+| `vector_index.faiss` | Stores ticket embeddings |
+| `ticket_texts.pkl` | Stores ticket descriptions mapped to vectors |
 
 ## Step 3: Semantic Search
 User queries are converted into embeddings and matched against the FAISS index to retrieve highly contextual documents even without exact keyword matches.
 
 ## Step 4: Retrieval-Augmented Generation (RAG) via Groq API
-The retrieved tickets are used as context for the Intelligent Assistant. By migrating to the Groq API, the system achieves near-instantaneous inference using Llama 3.1.
+The retrieved tickets are used as **context for the Intelligent Assistant**. By migrating to the **Groq API**, the system achieves near-instantaneous inference using Llama 3.1.
 
+```text
 User Query → Query Embedding → Semantic Search (FAISS) → Retrieve Relevant Tickets → Context Injection → LLM Response (Groq API)
+```
+
+---
 
 # ✅ Milestone 4: Enterprise UI & Deployment (Completed)
+
 ## Step 1: Flask Backend Integration
 Successfully integrated the entire RAG pipeline into a robust Python Flask backend, acting as the bridge between Neo4j, FAISS, and the Groq API.
 
@@ -151,17 +168,22 @@ Successfully integrated the entire RAG pipeline into a robust Python Flask backe
 Developed a 20/70/10 Glassmorphic UI using Vis.js for interactive, bi-directional graph exploration. Clicking a node automatically triggers the Groq AI, and AI responses auto-zoom the graph.
 
 ## Step 3: Cloud Deployment Ready
-Removed the need for local desktop applications. Added a comprehensive requirements.txt for streamlined deployment to cloud hosting environments.
+Removed the need for local desktop applications. Added a comprehensive `requirements.txt` for streamlined deployment to cloud hosting environments.
+
+---
 
 # ⚙️ Installation & Setup (Cloud-Native)
-No heavy desktop applications (like Neo4j Desktop or local Ollama) are required. The entire system connects to cloud infrastructure.
+
+*No heavy desktop applications (like Neo4j Desktop or local Ollama) are required. The entire system connects to cloud infrastructure.*
 
 ## 1️⃣ Clone the Repository
-
+```bash
 git clone [https://github.com/panchagnula-satwik/AI-Knowledge-Graph-Builder.git](https://github.com/panchagnula-satwik/AI-Knowledge-Graph-Builder.git)
 cd AI-Knowledge-Graph-Builder
-## 2️⃣ Create Virtual Environment
+```
 
+## 2️⃣ Create Virtual Environment
+```bash
 python -m venv .venv
 
 # Activate environment (Windows)
@@ -169,28 +191,35 @@ python -m venv .venv
 
 # Activate environment (Mac/Linux)
 source .venv/bin/activate
+```
 
 ## 3️⃣ Install Dependencies
-
+```bash
 pip install -r requirements.txt
+```
 
-## 4️⃣ Cloud Configuration Setup (.env)
-Create a .env file in the root directory to connect the application to the Groq LLM API and Neo4j AuraDB.
-
+## 4️⃣ Cloud Configuration Setup (`.env`)
+Create a `.env` file in the root directory to connect the application to the Groq LLM API and Neo4j AuraDB.
+```env
 # Groq API for the Intelligent Assistant
 GROQ_API_KEY=your_groq_api_key_here
 
 # Neo4j AuraDB Cloud Connection
 db_Url=neo4j+s://<YOUR_INSTANCE_ID>.databases.neo4j.io
-NEO4J_USERNAME=YOUR_INSTANCE_ID
+NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=your_aura_password
+```
 
 ## 5️⃣ Launch the Enterprise System
-
+```bash
 python app/app.py
+```
+
+---
 
 # 📁 Project Structure
 
+```text
 AI-Knowledge-Graph-Builder
 │
 ├── app
@@ -211,33 +240,42 @@ AI-Knowledge-Graph-Builder
 │
 ├── requirements.txt        # Production dependencies
 └── README.md
+```
+
+---
 
 # 📊 Current Status
 
+```text
 Milestone 1 ✅ Completed
 Milestone 2 ✅ Completed
 Milestone 3 ✅ Completed
 Milestone 4 ✅ Completed
+```
+
+---
 
 # 🤖 Example Interaction & Final Outcome
-## User Query in Intelligent Agent:
-"My laptop battery drains quickly."
 
-## Generated Cloud Response (Groq API):
-Check battery health.
-Update power management drivers.
-Reduce background applications.
-Adjust power settings.
-Replace battery if necessary.
+**User Query in Intelligent Agent:**
+> *"My laptop battery drains quickly."*
+
+**Generated Cloud Response (Groq API):**
+> 1. Check battery health.
+> 2. Update power management drivers.
+> 3. Reduce background applications.
+> 4. Adjust power settings.
+> 5. Replace battery if necessary.
 
 ## Final Outcome
-The system functions as a fully cloud-native, AI-powered IT support ecosystem capable of:
-Understanding natural language queries.
-Performing semantic search over support tickets.
-Retrieving relevant troubleshooting cases.
-Generating high-speed, intelligent repair recommendations via a sleek, interactive neural interface.
+The system functions as a fully cloud-native, **AI-powered IT support ecosystem** capable of:
+- Understanding natural language queries.
+- Performing semantic search over support tickets.
+- Retrieving relevant troubleshooting cases.
+- Generating high-speed, intelligent repair recommendations via a sleek, interactive neural interface.
 
-## 📌 Future Work
-Advanced graph analytics and historical time-series filtering.
-Multi-tenant enterprise deployment.
-Integration with live ticketing systems (ServiceNow/Jira).
+---
+# 📌 Future Work
+- Advanced graph analytics and historical time-series filtering.
+- Multi-tenant enterprise deployment.
+- Integration with live ticketing systems (ServiceNow/Jira).
