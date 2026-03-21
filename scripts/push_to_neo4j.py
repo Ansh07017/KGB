@@ -51,7 +51,7 @@ def create_relationship(tx, subject, predicate, obj):
 
 print(f"Successfully loaded {len(df)} triples. Starting injection...")
 
-with driver.session() as session:
+with driver.session(database="neo4j") as session:
     for index, row in df.iterrows():
         subject = str(row["Subject"]).strip()
         predicate = str(row["Predicate"]).strip()

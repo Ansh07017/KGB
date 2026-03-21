@@ -111,7 +111,7 @@ async function loadGraph() {
     server: '#3388ff',
     user: '#33ff88',
     issue: '#f4f02a',
-    device: '#49ccd7',
+    device: '#fff',
     other: '#a76161'
 };
 let group = node.group?.toLowerCase();
