@@ -291,7 +291,7 @@ AI-Knowledge-Graph-Builder
 Milestone 1 ✅ Completed
 Milestone 2 ✅ Completed
 Milestone 3 ✅ Completed
-Milestone 4 🔜 Upcoming
+Milestone 4 ✅ Completed
 ```
 
 ---
