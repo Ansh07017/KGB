@@ -13,30 +13,44 @@ from groq import Groq
 load_dotenv()
 app = Flask(__name__)
 
-# --- 1. PATH RESOLUTION ---
+# --- 1. PATH RESOLUTION (Cloud-Optimized) ---
+# This ensures data is found whether running locally or on Render's file system
 base_dir = os.path.dirname(os.path.abspath(__file__)) 
 project_root = os.path.dirname(base_dir) 
 
-faiss_path = os.path.join(project_root, "data", "vector_index.faiss")
-pkl_path = os.path.join(project_root, "data", "ticket_texts.pkl")
+# Check if data exists in the project root (Standard Architecture)
+data_dir = os.path.join(project_root, "data")
+if not os.path.exists(data_dir):
+    # Fallback for alternative directory structures
+    data_dir = os.path.join(base_dir, "data")
+
+faiss_path = os.path.join(data_dir, "vector_index.faiss")
+pkl_path = os.path.join(data_dir, "ticket_texts.pkl")
 
 # --- 2. INITIALIZE ENGINES ---
+# Groq Client for High-Speed Inference
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-# Neo4j Connection
+# Neo4j Cloud Connection (AuraDB)
 URI = os.getenv("db_Url")
 USERNAME = os.getenv("NEO4J_USERNAME")
 PASSWORD = os.getenv("NEO4J_PASSWORD")
 
-driver = GraphDatabase.driver(URI, auth=(USERNAME, PASSWORD))
+# Use max_connection_lifetime to prevent 'Broken Pipe' errors on Aura Cloud
+driver = GraphDatabase.driver(URI, auth=(USERNAME, PASSWORD), max_connection_lifetime=200)
 
-# FAISS & Sentence Transformers
-print("Loading Knowledge Base...")
-index = faiss.read_index(faiss_path)
-with open(pkl_path, "rb") as f:
-    texts = pickle.load(f)
-model = SentenceTransformer("all-MiniLM-L6-v2")
-print("KGB System Online.")
+# FAISS & Sentence Transformers (Memory-Optimized for 512MB)
+print("Initializing KGB Neural Engine...")
+try:
+    index = faiss.read_index(faiss_path)
+    with open(pkl_path, "rb") as f:
+        texts = pickle.load(f)
+    
+    # CRITICAL: Force CPU and small model usage to prevent OOM (Out of Memory) crashes
+    model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu") 
+    print("KGB System Online.")
+except Exception as e:
+    print(f"Deployment Critical Error: {e}")
 
 # ==========================================
 # ROUTES
@@ -49,7 +63,7 @@ def home():
 @app.route('/api/graph', methods=['GET'])
 def get_graph():
     def fetch_graph(tx):
-        # elementId() is used to maintain compatibility with Neo4j 5.x+
+        # elementId() maintains compatibility with Neo4j 5.x Aura instances
         query = """
         MATCH (n)-[r]->(m) 
         RETURN elementId(n) AS source_id, labels(n)[0] AS source_label, n.name AS source_name, 
@@ -62,7 +76,6 @@ def get_graph():
         edges = []
         
         for record in result:
-            # Nodes include a 'group' property to enable color-coding in the frontend
             nodes[record["source_id"]] = {
                 "id": record["source_id"], 
                 "label": record["source_name"], 
@@ -96,11 +109,11 @@ def chat():
 
     # Step 1: Semantic Search in FAISS
     query_vector = model.encode([query]).astype("float32")
-    distances, indices = index.search(np.array(query_vector), 5)
+    distances, indices = index.search(np.array(query_vector).reshape(1, -1), 5)
     
     context_text = "\n".join([texts[idx] for idx in indices[0]])
 
-    # Step 2: Prompt Construction
+    # Step 2: Prompt Construction for Llama 3.1
     prompt = f"""
     You are an Enterprise IT support assistant. 
     Analyze the following support tickets to answer the query.
@@ -109,7 +122,7 @@ def chat():
     User Question: {query}
     """
 
-    # Step 3: Groq Inference using Llama 3.1
+    # Step 3: Groq Inference using Llama-3.1-8b-instant
     try:
         completion = groq_client.chat.completions.create(
             model="llama-3.1-8b-instant", 
@@ -119,8 +132,7 @@ def chat():
         
         ai_response = completion.choices[0].message.content
         
-        # We extract specific entity patterns so the frontend can zoom to them
-        # This matches 'Ticket_X' or words starting with capital letters (potential entities)
+        # Entity extraction for frontend auto-zoom
         focus_nodes = list(set(re.findall(r'Ticket_\d+|[A-Z][a-z]+', context_text)))
         
         return jsonify({
@@ -129,8 +141,10 @@ def chat():
         })
         
     except Exception as e:
-        print(f"Groq API Error: {e}")
-        return jsonify({"error": "LLM Inference failed."}), 500
+        print(f"Groq Cloud Error: {e}")
+        return jsonify({"error": "Neural Inference failed."}), 500
     
+# Render uses Gunicorn, but this allows for local testing
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
