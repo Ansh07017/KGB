@@ -1,12 +1,12 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch==2.2.2+cpu
 faiss-cpu==1.7.4
-sentence-transformers==2.2.2
+numpy<2.0.0
+sentence-transformers>=2.7.0
 flask
 python-dotenv
 neo4j
 pandas
-numpy<2.0.0
 groq
 openpyxl
 gunicorn==21.2.0
