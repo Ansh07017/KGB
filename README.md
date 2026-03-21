@@ -168,7 +168,107 @@ MATCH (n)-[r]->(m)
 RETURN n,r,m
 LIMIT 25;
 ```
+# ✅ Milestone 3 – Semantic Search & RAG Pipeline
 
+## Objective
+
+Enable intelligent search and automated troubleshooting responses by integrating **semantic search** with a **Retrieval-Augmented Generation (RAG) pipeline**.
+
+---
+
+## Step 1: Embedding Generation
+
+Ticket descriptions were converted into **vector embeddings** using:
+
+```
+all-MiniLM-L6-v2
+```
+
+This allows the system to understand **semantic similarity** between support tickets.
+
+Example:
+
+```
+User Query: laptop not turning on
+```
+
+Even if a ticket says:
+
+```
+Device fails to power on
+```
+
+the system still retrieves it correctly.
+
+---
+
+## Step 2: Vector Database (FAISS)
+
+Embeddings were stored in a **FAISS vector database** for fast similarity search.
+
+Generated files:
+
+```
+vector_index.faiss
+ticket_texts.pkl
+```
+
+Purpose:
+
+| File | Description |
+|-----|-------------|
+| vector_index.faiss | Stores ticket embeddings |
+| ticket_texts.pkl | Stores ticket descriptions mapped to vectors |
+
+---
+
+## Step 3: Semantic Search
+
+User queries are converted into embeddings and matched against the FAISS index.
+
+Example query:
+
+```
+my laptop battery drains quickly
+```
+
+Semantic search retrieves tickets discussing:
+
+```
+battery failure
+power management issues
+device overheating
+```
+
+even without exact keyword matches.
+
+---
+
+## Step 4: Retrieval-Augmented Generation (RAG)
+
+The retrieved tickets are used as **context for the LLM**.
+
+Pipeline:
+
+```
+User Query
+      ↓
+Query Embedding
+      ↓
+Semantic Search (FAISS)
+      ↓
+Retrieve Relevant Tickets
+      ↓
+Context Injection
+      ↓
+LLM Response (Ollama + Mistral)
+```
+# ✅ Milestone 4: Enterprise UI & Deployment (Completed)
+##Step 1: Integrated the RAG pipeline into a Flask backend.
+
+## Step 2: Developed a 20/70/10 Glassmorphic UI using Vis.js for interactive, bi-directional graph exploration.
+
+## Step 3: Added requirements.txt for streamlined deployment.
 ---
 
 # ⚙️ Installation & Setup
@@ -207,7 +307,7 @@ source .venv/bin/activate
 ## 3️⃣ Install Dependencies
 
 ```bash
-pip install pandas ollama neo4j flask openpyxl sentence-transformers faiss-cpu
+pip install requirements.txt
 ```
 
 ---
@@ -304,102 +404,6 @@ Milestone 4 ✅ Completed
 - Integration with enterprise AI applications
 
 ---
-
-# ✅ Milestone 3 – Semantic Search & RAG Pipeline
-
-## Objective
-
-Enable intelligent search and automated troubleshooting responses by integrating **semantic search** with a **Retrieval-Augmented Generation (RAG) pipeline**.
-
----
-
-## Step 1: Embedding Generation
-
-Ticket descriptions were converted into **vector embeddings** using:
-
-```
-all-MiniLM-L6-v2
-```
-
-This allows the system to understand **semantic similarity** between support tickets.
-
-Example:
-
-```
-User Query: laptop not turning on
-```
-
-Even if a ticket says:
-
-```
-Device fails to power on
-```
-
-the system still retrieves it correctly.
-
----
-
-## Step 2: Vector Database (FAISS)
-
-Embeddings were stored in a **FAISS vector database** for fast similarity search.
-
-Generated files:
-
-```
-vector_index.faiss
-ticket_texts.pkl
-```
-
-Purpose:
-
-| File | Description |
-|-----|-------------|
-| vector_index.faiss | Stores ticket embeddings |
-| ticket_texts.pkl | Stores ticket descriptions mapped to vectors |
-
----
-
-## Step 3: Semantic Search
-
-User queries are converted into embeddings and matched against the FAISS index.
-
-Example query:
-
-```
-my laptop battery drains quickly
-```
-
-Semantic search retrieves tickets discussing:
-
-```
-battery failure
-power management issues
-device overheating
-```
-
-even without exact keyword matches.
-
----
-
-## Step 4: Retrieval-Augmented Generation (RAG)
-
-The retrieved tickets are used as **context for the LLM**.
-
-Pipeline:
-
-```
-User Query
-      ↓
-Query Embedding
-      ↓
-Semantic Search (FAISS)
-      ↓
-Retrieve Relevant Tickets
-      ↓
-Context Injection
-      ↓
-LLM Response (Ollama + Mistral)
-```
 
 ---
 
