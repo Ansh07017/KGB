@@ -7,3 +7,4 @@ sentence-transformers
 faiss-cpu
 groq
 openpyxl
+gunicorn==21.2.0
