@@ -208,6 +208,9 @@ GROQ_API_KEY=your_groq_api_key_here
 db_Url=neo4j+s://<YOUR_INSTANCE_ID>.databases.neo4j.io
 NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=your_aura_password
+
+# Deployment Port
+PORT=10000
 ```
 
 ## 5️⃣ Launch the Enterprise System
