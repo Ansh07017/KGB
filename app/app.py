@@ -8,10 +8,14 @@ import pickle
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from groq import Groq
+import torch
 
 # Load environment variables
 load_dotenv()
 app = Flask(__name__)
+
+# CRITICAL: Prevent PyTorch from spawning multiple threads and causing an OOM kill on Render
+torch.set_num_threads(1)
 
 # --- 1. PATH RESOLUTION (Cloud-Optimized) ---
 # This ensures data is found whether running locally or on Render's file system
@@ -107,23 +111,23 @@ def chat():
     if not query:
         return jsonify({"error": "No query provided"}), 400
 
-    # Step 1: Semantic Search in FAISS
-    query_vector = model.encode([query]).astype("float32")
-    distances, indices = index.search(np.array(query_vector).reshape(1, -1), 5)
-    
-    context_text = "\n".join([texts[idx] for idx in indices[0]])
-
-    # Step 2: Prompt Construction for Llama 3.1
-    prompt = f"""
-    You are an Enterprise IT support assistant. 
-    Analyze the following support tickets to answer the query.
-    
-    Context: {context_text}
-    User Question: {query}
-    """
-
-    # Step 3: Groq Inference using Llama-3.1-8b-instant
     try:
+        # Step 1: Semantic Search in FAISS (Now protected!)
+        query_vector = model.encode([query]).astype("float32")
+        distances, indices = index.search(np.array(query_vector).reshape(1, -1), 5)
+        
+        context_text = "\n".join([texts[idx] for idx in indices[0]])
+
+        # Step 2: Prompt Construction for Llama 3.1
+        prompt = f"""
+        You are an Enterprise IT support assistant. 
+        Analyze the following support tickets to answer the query.
+        
+        Context: {context_text}
+        User Question: {query}
+        """
+
+        # Step 3: Groq Inference using Llama-3.1-8b-instant
         completion = groq_client.chat.completions.create(
             model="llama-3.1-8b-instant", 
             messages=[{"role": "user", "content": prompt}],
@@ -141,8 +145,8 @@ def chat():
         })
         
     except Exception as e:
-        print(f"Groq Cloud Error: {e}")
-        return jsonify({"error": "Neural Inference failed."}), 500
+        print(f"Backend Crash Caught: {e}")
+        return jsonify({"error": str(e)}), 500
     
 # Render uses Gunicorn, but this allows for local testing
 if __name__ == '__main__':
