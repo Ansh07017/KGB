@@ -7,7 +7,7 @@
 [![Groq](https://img.shields.io/badge/Groq_API-f55036?style=for-the-badge&logo=groq&logoColor=white)]()
 [![Llama 3.1](https://img.shields.io/badge/Llama_3.1-0467df?style=for-the-badge&logo=meta&logoColor=white)]()
 
-![KGB Enterprise Dashboard](Screenshot%202026-03-21%20194256.jpg)
+![KGB Enterprise Dashboard](assets/Screenshot%202026-03-21%20194256.png.jpg)
 
 ---
 
@@ -53,7 +53,7 @@ Vector Database (FAISS)
       ↓
 Semantic Search
       ↓
-Retrieval-Augmented Generation (Groq API + Llama 3.1)
+Retrieval-Augmented Generation (Groq API + Llama 3.1)```
 
 ---
 
