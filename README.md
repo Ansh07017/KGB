@@ -1,4 +1,4 @@
-# 🧠 AI Knowledge Graph Builder for Enterprise Intelligence
+# 🧠 (KGB) AI Knowledge Graph Builder for Enterprise Intelligence
 ## **Developed as part of the Infosys Springboard Internship** 
 ## **Authors:** Satwik Panchagnula, Ansh Pratap Singh
 
