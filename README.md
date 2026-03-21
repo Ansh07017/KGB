@@ -168,143 +168,6 @@ MATCH (n)-[r]->(m)
 RETURN n,r,m
 LIMIT 25;
 ```
-
----
-
-# ⚙️ Installation & Setup
-
-## 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/panchagnula-satwik/AI-Knowledge-Graph-Builder.git
-cd AI-Knowledge-Graph-Builder
-```
-
----
-
-## 2️⃣ Create Virtual Environment
-
-```bash
-python -m venv .venv
-```
-
-Activate environment:
-
-Windows
-
-```bash
-.venv\Scripts\activate
-```
-
-Mac/Linux
-
-```bash
-source .venv/bin/activate
-```
-
----
-
-## 3️⃣ Install Dependencies
-
-```bash
-pip install pandas ollama neo4j flask openpyxl sentence-transformers faiss-cpu
-```
-
----
-
-# 🤖 LLM Setup (Ollama)
-
-Install Ollama and pull the Mistral model.
-
-```bash
-ollama pull mistral
-```
-
-Start Ollama server:
-
-```bash
-ollama serve
-```
-
----
-
-# 🧠 Neo4j Setup
-
-1. Install **Neo4j Desktop**
-2. Create a local database
-3. Start the database
-
-Connection details:
-
-```
-bolt://localhost:7687
-username: neo4j
-password: <your-password>
-```
-
-Insert triples into Neo4j:
-
-```bash
-python scripts/push_to_neo4j.py
-```
-
----
-
-# 📁 Project Structure
-
-```
-AI-Knowledge-Graph-Builder
-│
-├── app
-│   └── app.py
-│
-├── data
-│   ├── raw
-│   │   └── tickets.xlsx
-│   │
-│   ├── processed
-│   │   ├── cleaned_tickets.xlsx
-│   │   ├── structured_triples.csv
-│   │   ├── llm_triples.csv
-│   │   └── final_triples.csv
-│   │
-│   ├── vector_index.faiss
-│   └── ticket_texts.pkl
-│
-├── notebooks
-│   └── milestone2_llm_extraction.ipynb
-│
-├── scripts
-│   ├── push_to_neo4j.py
-│   ├── build_vector_index.py
-│   ├── semantic_search.py
-│   └── rag_pipeline.py
-│
-└── README.md
-```
-
----
-
-# 📊 Current Status
-
-```
-Milestone 1 ✅ Completed
-Milestone 2 ✅ Completed
-Milestone 3 ✅ Completed
-Milestone 4 🔜 Upcoming
-```
-
----
-
-# 📌 Future Work
-
-- Advanced graph analytics
-- Knowledge graph querying
-- Graph visualization dashboards
-- Integration with enterprise AI applications
-
----
-
 # ✅ Milestone 3 – Semantic Search & RAG Pipeline
 
 ## Objective
@@ -400,6 +263,147 @@ Context Injection
       ↓
 LLM Response (Ollama + Mistral)
 ```
+# ✅ Milestone 4: Enterprise UI & Deployment (Completed)
+## Step 1: Integrated the RAG pipeline into a Flask backend.
+
+## Step 2: Developed a 20/70/10 Glassmorphic UI using Vis.js for interactive, bi-directional graph exploration.
+
+## Step 3: Added requirements.txt for streamlined deployment.
+---
+
+# ⚙️ Installation & Setup
+
+## 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/panchagnula-satwik/AI-Knowledge-Graph-Builder.git
+cd AI-Knowledge-Graph-Builder
+```
+
+---
+
+## 2️⃣ Create Virtual Environment
+
+```bash
+python -m venv .venv
+```
+
+Activate environment:
+
+Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+Mac/Linux
+
+```bash
+source .venv/bin/activate
+```
+
+---
+
+## 3️⃣ Install Dependencies
+
+```bash
+pip install requirements.txt
+```
+
+---
+
+# 🤖 LLM Setup (Ollama)
+
+Install Ollama and pull the Mistral model.
+
+```bash
+ollama pull mistral
+```
+
+Start Ollama server:
+
+```bash
+ollama serve
+```
+
+---
+
+# 🧠 Neo4j Setup
+
+1. Install **Neo4j Desktop**
+2. Create a local database
+3. Start the database
+
+Connection details:
+
+```
+bolt://localhost:7687
+username: neo4j
+password: <your-password>
+```
+
+Insert triples into Neo4j:
+
+```bash
+python scripts/push_to_neo4j.py
+```
+
+---
+
+# 📁 Project Structure
+
+```
+AI-Knowledge-Graph-Builder
+│
+├── app
+│   └── app.py
+│
+├── data
+│   ├── raw
+│   │   └── tickets.xlsx
+│   │
+│   ├── processed
+│   │   ├── cleaned_tickets.xlsx
+│   │   ├── structured_triples.csv
+│   │   ├── llm_triples.csv
+│   │   └── final_triples.csv
+│   │
+│   ├── vector_index.faiss
+│   └── ticket_texts.pkl
+│
+├── notebooks
+│   └── milestone2_llm_extraction.ipynb
+│
+├── scripts
+│   ├── push_to_neo4j.py
+│   ├── build_vector_index.py
+│   ├── semantic_search.py
+│   └── rag_pipeline.py
+│
+└── README.md
+```
+
+---
+
+# 📊 Current Status
+
+```
+Milestone 1 ✅ Completed
+Milestone 2 ✅ Completed
+Milestone 3 ✅ Completed
+Milestone 4 ✅ Completed
+```
+
+---
+
+# 📌 Future Work
+
+- Advanced graph analytics
+- Knowledge graph querying
+- Graph visualization dashboards
+- Integration with enterprise AI applications
+
+---
 
 ---
 
