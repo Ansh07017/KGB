@@ -9,13 +9,15 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from groq import Groq
 import torch
+import gc
 
 # Load environment variables
 load_dotenv()
 app = Flask(__name__)
 
-# CRITICAL: Prevent PyTorch from spawning multiple threads and causing an OOM kill on Render
+# CRITICAL: Absolute Minimalist Memory Footprint for Free Tier Cloud
 torch.set_num_threads(1)
+torch.set_grad_enabled(False) # <--- Completely disables training memory
 
 # --- 1. PATH RESOLUTION (Cloud-Optimized) ---
 # This ensures data is found whether running locally or on Render's file system
@@ -112,6 +114,9 @@ def chat():
         return jsonify({"error": "No query provided"}), 400
 
     try:
+        # Force RAM cleanup instantly before processing to avoid 502 Bad Gateway
+        gc.collect() 
+        
         # Step 1: Semantic Search in FAISS (Now protected!)
         query_vector = model.encode([query]).astype("float32")
         distances, indices = index.search(np.array(query_vector).reshape(1, -1), 5)

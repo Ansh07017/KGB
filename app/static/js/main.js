@@ -168,14 +168,20 @@ let colorSettings = {
 
         network = new vis.Network(container, { nodes: nodesDataSet, edges: edgesDataSet }, options);
 
-        // HIDE LOADER ONLY AFTER PHYSICS STABILIZE
-        network.once("stabilizationIterationsDone", function () {
-            document.getElementById('loader-overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('loader-overlay').style.display = 'none';
-                network.fit({ animation: { duration: 2000 } });
-            }, 500);
-        });
+        // HIDE LOADER ONLY AFTER PHYSICS STABILIZE (Safe Version)
+network.once("stabilizationIterationsDone", function () {
+    const loader = document.getElementById('loader-overlay');
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            loader.style.display = 'none';
+            network.fit({ animation: { duration: 2000 } });
+        }, 500);
+    } else {
+        // If loader doesn't exist, just run the zoom animation
+        network.fit({ animation: { duration: 2000 } });
+    }
+});
 
         // MINIMALIST CLICK INTERACTION
         network.on("click", function (params) {
