@@ -264,7 +264,7 @@ Context Injection
 LLM Response (Ollama + Mistral)
 ```
 # ✅ Milestone 4: Enterprise UI & Deployment (Completed)
-##Step 1: Integrated the RAG pipeline into a Flask backend.
+## Step 1: Integrated the RAG pipeline into a Flask backend.
 
 ## Step 2: Developed a 20/70/10 Glassmorphic UI using Vis.js for interactive, bi-directional graph exploration.
 
