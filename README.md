@@ -1,13 +1,12 @@
 # 🧠 AI Knowledge Graph Builder for Enterprise Intelligence
-**Developed as part of the Infosys Springboard Internship** **Authors:** Satwik Panchagnula, Ansh Pratap Singh
+**Developed as part of the Infosys Springboard Internship** 
+**Authors:** Satwik Panchagnula, Ansh Pratap Singh
 
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)]()
 [![Neo4j](https://img.shields.io/badge/Neo4j_Aura_Cloud-018bff?style=for-the-badge&logo=neo4j&logoColor=white)]()
 [![Groq](https://img.shields.io/badge/Groq_API-f55036?style=for-the-badge&logo=groq&logoColor=white)]()
 [![Llama 3.1](https://img.shields.io/badge/Llama_3.1-0467df?style=for-the-badge&logo=meta&logoColor=white)]()
-
-![KGB Enterprise Dashboard](assets/preview.png)
 
 ---
 
@@ -266,6 +265,10 @@ Milestone 4 ✅ Completed
 > 3. Reduce background applications.
 > 4. Adjust power settings.
 > 5. Replace battery if necessary.
+
+# Project Preview
+
+![KGB Enterprise Dashboard](assets/preview.png)
 
 ## Final Outcome
 The system functions as a fully cloud-native, **AI-powered IT support ecosystem** capable of:
