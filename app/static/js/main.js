@@ -140,6 +140,9 @@ let colorSettings = {
         edgesDataSet = new vis.DataSet(data.edges);
         
         const options = {
+            layout: {
+                improvedLayout: false
+            },
             nodes: {
                 shape: 'dot',
                 borderWidth: 2,

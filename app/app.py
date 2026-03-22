@@ -29,7 +29,7 @@ if not IS_CLOUD:
 else:
     print("Detected Cloud Environment: Initializing Serverless Hugging Face API...")
     HF_API_KEY = os.getenv("HF_API_KEY")
-    HF_API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+    HF_API_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2"
     headers = {"Authorization": f"Bearer {HF_API_KEY}"}
 
 # --- 2. PATH RESOLUTION (Cloud-Optimized) ---
