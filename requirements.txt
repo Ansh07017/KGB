@@ -11,4 +11,5 @@ neo4j
 pandas
 groq
 openpyxl
+requests
 gunicorn==21.2.0
