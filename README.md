@@ -1,6 +1,6 @@
 # 🧠 (KGB) AI Knowledge Graph Builder for Enterprise Intelligence
- **Developed as part of the Infosys Springboard Internship** 
- **Authors:** Satwik Panchagnula, Ansh Pratap Singh
+### **Developed as part of the Infosys Springboard Internship** 
+### **Authors:** Satwik Panchagnula, Ansh Pratap Singh
 <a href="https://kgb-12g3.onrender.com/"><img src="https://img.shields.io/badge/🔴_Live_Demo-00D4AA?style=for-the-badge&logoColor=white" alt="Live Demo"/></a>
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)]()
