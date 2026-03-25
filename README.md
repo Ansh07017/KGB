@@ -169,10 +169,10 @@ Successfully integrated the entire RAG pipeline into a robust Python Flask backe
 Developed a 20/70/10 Glassmorphic UI using Vis.js for interactive, bi-directional graph exploration. Clicking a node automatically triggers the Groq AI, and AI responses auto-zoom the graph.
 
 ## Step 3: Hybrid Cloud Deployment Architecture
-*** Removed the need for local desktop applications. Added a comprehensive `requirements.txt` for streamlined deployment to cloud hosting environments.
+<p>Removed the need for local desktop applications. Added a comprehensive `requirements.txt` for streamlined deployment to cloud hosting environments.
 Engineered an environment-aware hybrid embedding system to bypass strict free-tier memory limits (512MB RAM).
 -> Local Environment: Initializes high-speed local PyTorch SentenceTransformers for zero-latency desktop presentations.
--> Cloud Environment: Automatically detects Render deployment and seamlessly shifts to the serverless Hugging Face Inference API, dropping RAM footprint by ~70% and ensuring 100% crash-free uptime.***
+-> Cloud Environment: Automatically detects Render deployment and seamlessly shifts to the serverless Hugging Face Inference API, dropping RAM footprint by ~70% and ensuring 100% crash-free uptime.</p>
 ---
 
 # ⚙️ Installation & Setup (Cloud-Native)
