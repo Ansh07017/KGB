@@ -67,6 +67,30 @@ except Exception as e:
 def home():
     return render_template('index.html')
 
+from flask import jsonify
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    """
+    Uptime route to prevent Render from sleeping AND keep Neo4j AuraDB awake.
+    """
+    try:
+        with driver.session() as session:
+            session.run("RETURN 1") 
+            
+        return jsonify({
+            "status": "healthy", 
+            "server": "awake",
+            "neo4j_auradb": "connected and active"
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "status": "degraded", 
+            "error": "Database connection failed", 
+            "details": str(e)
+        }), 503
+
 @app.route('/api/graph', methods=['GET'])
 def get_graph():
     def fetch_graph(tx):
