@@ -1,8 +1,7 @@
 # 🧠 (KGB) AI Knowledge Graph Builder for Enterprise Intelligence
-## **Developed as part of the Infosys Springboard Internship** 
-## **Authors:** Satwik Panchagnula, Ansh Pratap Singh
-## **Dynamic Url:** https://kgb-12g3.onrender.com
-
+### **Developed as part of the Infosys Springboard Internship** 
+### **Authors:** Satwik Panchagnula, Ansh Pratap Singh
+<a href="https://kgb-12g3.onrender.com/"><img src="https://img.shields.io/badge/🔴_Live_Demo-00D4AA?style=for-the-badge&logoColor=white" alt="Live Demo"/></a>
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)]()
 [![Neo4j](https://img.shields.io/badge/Neo4j_Aura_Cloud-018bff?style=for-the-badge&logo=neo4j&logoColor=white)]()
@@ -170,10 +169,10 @@ Successfully integrated the entire RAG pipeline into a robust Python Flask backe
 Developed a 20/70/10 Glassmorphic UI using Vis.js for interactive, bi-directional graph exploration. Clicking a node automatically triggers the Groq AI, and AI responses auto-zoom the graph.
 
 ## Step 3: Hybrid Cloud Deployment Architecture
-Removed the need for local desktop applications. Added a comprehensive `requirements.txt` for streamlined deployment to cloud hosting environments.
-Engineered an environment-aware hybrid embedding system to bypass strict free-tier memory limits (512MB RAM).
--> Local Environment: Initializes high-speed local PyTorch SentenceTransformers for zero-latency desktop presentations.
--> Cloud Environment: Automatically detects Render deployment and seamlessly shifts to the serverless Hugging Face Inference API, dropping RAM footprint by ~70% and ensuring 100% crash-free uptime.
+<p>Removed the need for local desktop applications. Added a comprehensive `requirements.txt` for streamlined deployment to cloud hosting environments.
+Engineered an environment-aware hybrid embedding system to bypass strict free-tier memory limits (512MB RAM).<br>
+-> Local Environment: Initializes high-speed local PyTorch SentenceTransformers for zero-latency desktop presentations.<br>
+-> Cloud Environment: Automatically detects Render deployment and seamlessly shifts to the serverless Hugging Face Inference API, dropping RAM footprint by ~70% and ensuring 100% crash-free uptime.</p>
 ---
 
 # ⚙️ Installation & Setup (Cloud-Native)
