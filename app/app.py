@@ -7,8 +7,10 @@ import faiss
 import pickle
 import numpy as np
 import requests
+from agents import run_resolution_workflow
 from groq import Groq
 import gc
+import uuid
 
 # Load environment variables
 load_dotenv()
@@ -58,7 +60,7 @@ try:
     print("KGB Database Connected.")
 except Exception as e:
     print(f"Data Load Error: {e}")
-
+hitl_queue_db = []
 # ==========================================
 # ROUTES
 # ==========================================
@@ -132,48 +134,72 @@ def chat():
     try:
         gc.collect() 
         
-        # Step 1: Hybrid Semantic Embedding
-        if IS_CLOUD:
-            # Cloud: Use API to save RAM
-            response = requests.post(HF_API_URL, headers=headers, json={"inputs": query})
-            if response.status_code != 200:
-                return jsonify({"error": f"Cloud Embedding Engine Timeout: {response.text}"}), 502
-            query_vector = np.array(response.json()).astype("float32")
-        else:
-            # Local: Use PyTorch for speed
-            query_vector = model.encode([query]).astype("float32")
-        
-        # Step 2: Semantic Search in FAISS
-        distances, indices = index.search(query_vector.reshape(1, -1), 5)
-        context_text = "\n".join([texts[idx] for idx in indices[0]])
+        # --- DEFINE THE FAISS TOOL FOR THE AGENT ---
+        def faiss_search_tool(search_query):
+            if IS_CLOUD:
+                response = requests.post(HF_API_URL, headers=headers, json={"inputs": search_query})
+                if response.status_code != 200:
+                    return f"Error: Cloud Engine Timeout."
+                query_vector = np.array(response.json()).astype("float32")
+            else:
+                query_vector = model.encode([search_query]).astype("float32")
+            
+            distances, indices = index.search(query_vector.reshape(1, -1), 5)
+            return "\n".join([texts[idx] for idx in indices[0]])
 
-        # Step 3: Prompt Construction
-        prompt = f"""
-        You are an Enterprise IT support assistant. 
-        Analyze the following support tickets to answer the query.
-        Context: {context_text}
-        User Question: {query}
-        """
+        # --- OPTIONAL: DEFINE A NEO4J TOOL ---
+        def neo4j_search_tool(search_query):
+            # For now, we will return a generic string so the agent doesn't break,
+            # but you can expand this to run Cypher queries later!
+            return "Graph database active. Entity relations available."
 
-        # Step 4: Groq Inference
-        completion = groq_client.chat.completions.create(
-            model="llama-3.1-8b-instant", 
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.2 
+        # --- RUN THE MULTI-AGENT WORKFLOW ---
+        agent_payload = run_resolution_workflow(
+            ticket_text=query,
+            faiss_search_fn=faiss_search_tool,
+            neo4j_search_fn=neo4j_search_tool
         )
-        ai_response = completion.choices[0].message.content
         
-        focus_nodes = list(set(re.findall(r'Ticket_\d+|[A-Z][a-z]+', context_text)))
+        # --- EXTRACT FOCUS NODES FOR VIS.JS UI ZOOM ---
+        # We parse the agent's final resolution text for entities to trigger the frontend animation
+        focus_nodes = list(set(re.findall(r'Ticket_\d+|[A-Z][a-z]+', agent_payload['resolution'])))
+        ticket_id = str(uuid.uuid4())[:8]
+        if agent_payload['status'] == "Pending_Human_Review":
+            hitl_queue_db.append({
+                "id": ticket_id,
+                "query": query,
+                "draft": agent_payload["resolution"],
+                "flag": agent_payload["safety_report"]["flag_reason"]
+            })
         
         return jsonify({
-            "response": ai_response,
+            "response": agent_payload["resolution"],
+            "logs": agent_payload["logs"],
+            "status": agent_payload["status"],
+            "classification": agent_payload["classification"],
+            "safety_report": agent_payload["safety_report"],
             "focus_nodes": focus_nodes
         })
         
     except Exception as e:
         print(f"Backend Crash Caught: {e}")
         return jsonify({"error": str(e)}), 500
+@app.route('/queue')
+def hitl_queue():
+    # Renders the admin dashboard and passes the current flagged tickets
+    return render_template('queue.html', queue=hitl_queue_db)
+
+@app.route('/api/queue/action/<ticket_id>', methods=['POST'])
+def process_queue_action(ticket_id):
+    # Endpoint for the Admin UI to approve or reject a ticket
+    global hitl_queue_db
+    action = request.json.get('action') # 'approve' or 'reject'
     
+    # Remove the processed ticket from our temporary DB
+    hitl_queue_db = [ticket for ticket in hitl_queue_db if ticket['id'] != ticket_id]
+    
+    return jsonify({"status": "success", "message": f"Ticket {action} successfully."})
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)

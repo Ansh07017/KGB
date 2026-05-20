@@ -284,6 +284,9 @@ Milestone 4 ✅ Completed
 
 ![KGB Enterprise Dashboard](assets/preview.png)
 
+# Architecture Diagram
+![Visual Architecture Diagram](assets\architecture_diagram.jpg)
+
 ## Final Outcome
 The system functions as a fully cloud-native, **AI-powered IT support ecosystem** capable of:
 - Understanding natural language queries.
