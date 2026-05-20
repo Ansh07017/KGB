@@ -7,7 +7,7 @@ import faiss
 import pickle
 import numpy as np
 import requests
-from agents import run_resolution_workflow
+from app.agents import run_resolution_workflow
 from groq import Groq
 import gc
 import uuid
