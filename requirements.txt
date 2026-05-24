@@ -13,3 +13,6 @@ groq
 openpyxl
 requests
 gunicorn==21.2.0
+pymongo
+werkzeug
+certifi

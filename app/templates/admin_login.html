@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGB — Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: auto;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            background: var(--navy-deep);
+            border: 1px solid var(--navy-rim-hi);
+            border-radius: 12px;
+            padding: 44px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            margin: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--amber), transparent);
+        }
+
+        .login-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .login-kgb {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 0.25em;
+            color: var(--amber);
+            border: 1px solid var(--amber-border);
+            padding: 6px 16px;
+            border-radius: 4px;
+            background: var(--amber-trace);
+        }
+
+        .login-brand h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .login-brand p {
+            font-size: 0.75rem;
+            color: var(--white-ghost);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--white-dim);
+        }
+
+        .form-group input {
+            background: rgba(10,18,37,0.8);
+            border: 1px solid var(--navy-rim-hi);
+            border-radius: 6px;
+            padding: 12px 16px;
+            color: var(--white);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .form-group input:focus {
+            border-color: var(--amber-border-hi);
+            box-shadow: 0 0 0 3px var(--amber-glow);
+        }
+
+        .error-msg {
+            background: rgba(248,113,113,0.1);
+            border: 1px solid rgba(248,113,113,0.3);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #f87171;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .login-btn {
+            background: var(--amber);
+            color: var(--midnight);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            padding: 14px;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+            width: 100%;
+        }
+
+        .login-btn:hover {
+            background: var(--amber-bright);
+            box-shadow: var(--shadow-amber);
+            transform: translateY(-1px);
+        }
+
+        .login-back {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--white-ghost);
+        }
+
+        .login-back a {
+            color: var(--white-dim);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .login-back a:hover { color: var(--amber); }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <div class="login-brand">
+        <div class="login-kgb">KGB</div>
+        <h2>Admin Console</h2>
+        <p>Secure access · IT Staff only</p>
+    </div>
+
+    {% if error %}
+    <div class="error-msg">⚠ {{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/admin-login">
+        <div style="display:flex; flex-direction:column; gap:18px;">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="admin@kgb.local" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="login-btn">🔐 &nbsp;Sign In to Console</button>
+        </div>
+    </form>
+
+    <div class="login-back">
+        <a href="/">← Back to Gateway</a>
+    </div>
+</div>
+
+</body>
+</html>

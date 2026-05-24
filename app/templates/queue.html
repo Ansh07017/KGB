@@ -3,63 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGB - HITL Admin Queue</title>
+    <title>KGB — HITL Security Queue</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .queue-container { padding: 40px; max-width: 1000px; margin: 0 auto; height: 100%; overflow-y: auto; }
-        .ticket-card { background: rgba(40,40,40,0.6); border-left: 4px solid var(--neon-red); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        .flag-reason { color: var(--neon-red); font-weight: bold; margin-bottom: 10px; font-family: monospace; }
-        .action-btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-weight: bold; margin-right: 10px; transition: 0.3s; }
-        .btn-approve { background: var(--user-green); color: black; }
-        .btn-reject { background: var(--neon-red); color: white; }
-        .btn-approve:hover { box-shadow: 0 0 15px var(--user-green); }
-        .btn-reject:hover { box-shadow: 0 0 15px var(--neon-red); }
-    </style>
 </head>
-<body>
-    <header class="main-header" style="height: 10vh;">
-        <div class="header-content">
-            <div class="kgb-icon">KGB</div>
-            <div class="header-titles">
-                <h1>SECURITY CONSOLE</h1>
-                <h2>Human-in-the-Loop (HITL) Queue</h2>
+<body class="queue-page">
+
+<div class="queue-topbar">
+    <div class="queue-brand">
+        <div class="kgb-icon">KGB</div>
+        <div>
+            <h1>Security Console</h1>
+            <h2>Human-in-the-Loop Queue</h2>
+        </div>
+    </div>
+    <a href="/admin" class="back-link">← Agent Console</a>
+</div>
+
+<div class="queue-wrapper">
+    <div class="queue-heading">Review Queue</div>
+    <div class="queue-sub">Flagged items pending human authorization</div>
+
+    {% if queue|length == 0 %}
+        <div class="queue-empty">
+            <span class="queue-empty-icon">◎</span>
+            No pending tickets — system secure
+        </div>
+    {% else %}
+        {% for ticket in queue %}
+        <div class="ticket-card" id="ticket-{{ ticket.id }}">
+            <div class="flag-reason">⚠ {{ ticket.flag }}</div>
+            <p><strong>User Query</strong>{{ ticket.query }}</p>
+            <div style="background:rgba(10,18,37,0.6); border:1px solid var(--navy-rim); border-radius:4px; padding:16px 18px; margin:14px 0;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:0.56rem; font-weight:400; letter-spacing:0.2em; text-transform:uppercase; color:var(--white-ghost); display:block; margin-bottom:8px;">AI Draft Resolution</span>
+                <span style="font-size:0.87rem; font-weight:300; line-height:1.7; color:var(--white-dim);">{{ ticket.draft }}</span>
+            </div>
+            <div class="ticket-actions">
+                <button class="action-btn btn-approve" onclick="resolveTicket('{{ ticket.id }}', 'approve')">✓ Authorize</button>
+                <button class="action-btn btn-reject"  onclick="resolveTicket('{{ ticket.id }}', 'reject')">✕ Reject</button>
             </div>
         </div>
-    </header>
+        {% endfor %}
+    {% endif %}
+</div>
 
-    <main class="main-stage queue-container glass-panel" style="margin-top: 20px;">
-        {% if queue|length == 0 %}
-            <h3 style="color: #888; text-align: center; margin-top: 50px;">No pending tickets. System secure.</h3>
-        {% else %}
-            {% for ticket in queue %}
-            <div class="ticket-card" id="ticket-{{ ticket.id }}">
-                <div class="flag-reason">⚠️ FLAG: {{ ticket.flag }}</div>
-                <p><strong>User Query:</strong> {{ ticket.query }}</p>
-                <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 4px; margin: 15px 0;">
-                    <strong>AI Draft Resolution:</strong><br>
-                    <span style="opacity: 0.8; font-size: 0.9em;">{{ ticket.draft }}</span>
-                </div>
-                <div>
-                    <button class="action-btn btn-approve" onclick="resolveTicket('{{ ticket.id }}', 'approve')">AUTHORIZE</button>
-                    <button class="action-btn btn-reject" onclick="resolveTicket('{{ ticket.id }}', 'reject')">REJECT</button>
-                </div>
-            </div>
-            {% endfor %}
-        {% endif %}
-    </main>
-
-    <script>
-        async function resolveTicket(ticketId, action) {
-            const response = await fetch(`/api/queue/action/${ticketId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: action })
-            });
-            if(response.ok) {
-                document.getElementById(`ticket-${ticketId}`).style.opacity = '0';
-                setTimeout(() => document.getElementById(`ticket-${ticketId}`).remove(), 300);
-            }
+<script>
+    async function resolveTicket(ticketId, action) {
+        const response = await fetch(`/api/queue/action/${ticketId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: action })
+        });
+        if (response.ok) {
+            const el = document.getElementById(`ticket-${ticketId}`);
+            el.style.transition = 'opacity 0.35s, transform 0.3s';
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(-6px)';
+            setTimeout(() => el.remove(), 370);
         }
-    </script>
+    }
+</script>
 </body>
 </html>

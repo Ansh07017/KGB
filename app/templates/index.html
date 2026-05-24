@@ -9,61 +9,75 @@
 </head>
 <body>
 
+<!-- ════════════════════════════════════
+     LEFT SIDEBAR — nav + KPIs only
+════════════════════════════════════ -->
 <header class="main-header">
+
     <div class="header-content">
         <div class="kgb-icon">KGB</div>
         <div class="header-titles">
-    <h1>ENTERPRISE INTELLIGENCE</h1>
-    <h2>Knowledge Graph Builder</h2>
-    
-    <nav style="margin-top: 10px; display: flex; gap: 15px;">
-        <a href="/" style="color: var(--stark-white); text-decoration: none; font-size: 0.9rem; border-bottom: 2px solid transparent; transition: 0.3s;" onmouseover="this.style.borderColor='var(--neon-red)'" onmouseout="this.style.borderColor='transparent'">Agent Console</a>
-        
-        <a href="/queue" style="color: var(--neon-red); text-decoration: none; font-size: 0.9rem; border-bottom: 2px solid transparent; transition: 0.3s;" onmouseover="this.style.borderColor='var(--neon-red)'" onmouseout="this.style.borderColor='transparent'">HITL Security Queue ⚠️</a>
-    </nav>
-</div>
+            <h1>Enterprise Intelligence</h1>
+            <h2>Knowledge Graph Builder</h2>
+        </div>
     </div>
 
     <section class="kpi-section">
         <div class="kpi-card">
-            <span class="kpi-icon">💠</span>
-            <div class="kpi-value">164</div>
-            <div class="kpi-label">Entities</div>
+            <span class="kpi-icon">◈</span>
+            <div class="kpi-meta">
+                <div class="kpi-value">164</div>
+                <div class="kpi-label">Entities</div>
+            </div>
         </div>
         <div class="kpi-card">
-            <span class="kpi-icon">🔗</span>
-            <div class="kpi-value">305</div>
-            <div class="kpi-label">Relationships</div>
+            <span class="kpi-icon">⬡</span>
+            <div class="kpi-meta">
+                <div class="kpi-value">305</div>
+                <div class="kpi-label">Relationships</div>
+            </div>
         </div>
         <div class="kpi-card">
-            <span class="kpi-icon">⚡</span>
-            <div class="kpi-value glow-text">Online</div>
-            <div class="kpi-label">Llama 3.1</div>
+            <span class="kpi-icon">◉</span>
+            <div class="kpi-meta">
+                <div class="kpi-value glow-text"><span class="status-pip"></span>Online</div>
+                <div class="kpi-label">Llama 3.1</div>
+            </div>
         </div>
     </section>
-</header>
 
-<main class="main-stage">
-    
-    <div class="glass-panel chat-container">
-        <div class="panel-header">Intelligent Agent</div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="message bot-message">Neural interface active. How can I assist?</div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="Query neural network (e.g. 'Network issues')..." onkeypress="handleKeyPress(event)">
-            <button class="analyze-btn" onclick="sendMessage()">Analyze</button>
+    <div style="padding: 8px 22px 4px; border-bottom: 1px solid var(--navy-rim); flex-shrink:0;">
+        <div class="header-titles">
+            <nav>
+                <a href="/admin">⬡ &nbsp;Agent Console</a>
+                <a href="/queue" class="hitl-badge" style="margin-top:10px; text-decoration:none;">⚠ HITL Security Queue</a>
+                <a href="/admin-logout" style="margin-top:10px; text-decoration:none; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--white-ghost); display:block;">⎋ &nbsp;Logout</a>
+            </nav>
         </div>
     </div>
 
-    <div class="glass-panel graph-container">
+    <div class="sidebar-footer">
+        <p>
+            <span class="dev-name">Ansh</span>, <span class="dev-name">Punit</span> &amp; <span class="dev-name">Satwik</span>
+        </p>
+        <span class="copyright">© 2026 KGB · All rights reserved</span>
+    </div>
+
+</header>
+
+<!-- ════════════════════════════════════
+     CENTER — Graph hero
+════════════════════════════════════ -->
+<main class="main-stage">
+    <div class="graph-container">
+
         <div class="panel-header">
             Knowledge Graph Explorer
             <div class="graph-search-wrapper">
-                <input type="text" id="graphSearch" placeholder="Find entity..." oninput="searchNode()">
+                <input type="text" id="graphSearch" placeholder="Find entity…" oninput="searchNode()">
             </div>
         </div>
-        
+
         <div id="mynetwork"></div>
 
         <div id="mini-intel-box" class="mini-box hidden">
@@ -78,20 +92,31 @@
             <div class="legend-item"><span class="legend-dot issue"></span> Issue</div>
             <div class="legend-item"><span class="legend-dot device"></span> Device</div>
             <div class="legend-item"><span class="legend-dot other"></span> Others</div>
-
         </div>
-    </div>
 
+    </div>
 </main>
 
-<footer class="main-footer glass-panel">
-    <div class="footer-center">
-        <div class="developers">
-            An "AI Based Knowledge Graph Builder" Developed by: <span class="dev-name">Ansh, Punit</span> & <span class="dev-name">Satwik</span>
-        </div>
-        <p class="copyright">© 2026. All rights reserved.</p>
+<!-- ════════════════════════════════════
+     RIGHT PANEL — Chat (full height)
+════════════════════════════════════ -->
+<div class="chat-container">
+
+    <div class="chat-panel-header">
+        <div class="chat-panel-title">Intelligent Agent</div>
+        <div class="chat-panel-subtitle">Ask anything about your graph</div>
     </div>
-</footer>
+
+    <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">Neural interface active. How can I assist?</div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="userInput" placeholder="Query the knowledge graph…" onkeypress="handleKeyPress(event)">
+        <button class="analyze-btn" onclick="sendMessage()">Analyze</button>
+    </div>
+
+</div>
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
