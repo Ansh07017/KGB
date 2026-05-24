@@ -108,7 +108,7 @@ except Exception as e:
     mongo_db = None
     users_collection = None
     tickets_collection = None
-
+    MONGO_CRASH_REASON = str(e)
 # ==========================================
 # AUTH HELPERS
 # ==========================================
@@ -177,7 +177,8 @@ def user_login():
                     session["user_name"] = user.get("name", "User")
                     return redirect(url_for("support"))
                 else:
-                    error = "Invalid email or password."
+                    global MONGO_CRASH_REASON
+                    error = f"Database Crash: {MONGO_CRASH_REASON}"
 
     return render_template('user_login.html', error=error)
 
@@ -201,6 +202,7 @@ def admin_login():
     if request.method == 'POST':
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
+        
         if users_collection is not None:
             user = users_collection.find_one({"email": email, "role": "admin"})
             if user and check_password_hash(user["password"], password):
@@ -211,7 +213,10 @@ def admin_login():
             else:
                 error = "Invalid email or password."
         else:
-            error = "Database unavailable. Please try again later."
+            # THIS IS WHERE IT NEEDS TO BE!
+            global MONGO_CRASH_REASON
+            error = f"Database Crash: {MONGO_CRASH_REASON}"
+            
     return render_template('admin_login.html', error=error)
 
 @app.route('/admin-logout')
