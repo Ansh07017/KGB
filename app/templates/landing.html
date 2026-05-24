@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGB Enterprise Intelligence — Gateway</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: auto;
+        }
+
+        .landing-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 48px;
+            padding: 40px 24px;
+            max-width: 860px;
+            width: 100%;
+        }
+
+        .landing-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .landing-kgb-icon {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            letter-spacing: 0.25em;
+            color: var(--amber);
+            text-shadow: 0 0 32px rgba(245,166,35,0.45);
+            border: 1px solid var(--amber-border);
+            padding: 10px 22px;
+            border-radius: 6px;
+            background: var(--amber-trace);
+        }
+
+        .landing-brand h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 0.04em;
+        }
+
+        .landing-brand p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .portal-grid { grid-template-columns: 1fr; }
+        }
+
+        .portal-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 32px 28px;
+            background: var(--navy-deep);
+            border: 1px solid var(--navy-rim-hi);
+            border-radius: 10px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+            cursor: pointer;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 10px;
+        }
+
+        .portal-card.user::before {
+            background: radial-gradient(ellipse at top left, rgba(52,211,153,0.08) 0%, transparent 70%);
+        }
+
+        .portal-card.admin::before {
+            background: radial-gradient(ellipse at top left, rgba(245,166,35,0.1) 0%, transparent 70%);
+        }
+
+        .portal-card:hover::before { opacity: 1; }
+
+        .portal-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        }
+
+        .portal-card.user:hover { border-color: rgba(52,211,153,0.4); }
+        .portal-card.admin:hover { border-color: var(--amber-border-hi); }
+
+        .portal-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .portal-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--white-ghost);
+            margin-bottom: -10px;
+        }
+
+        .portal-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .portal-desc {
+            font-size: 0.82rem;
+            font-weight: 300;
+            color: var(--white-dim);
+            line-height: 1.65;
+        }
+
+        .portal-cta {
+            margin-top: 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .portal-card.user .portal-cta  { color: #34d399; }
+        .portal-card.admin .portal-cta { color: var(--amber); }
+
+        .divider {
+            width: 1px;
+            height: 48px;
+            background: linear-gradient(180deg, transparent, var(--navy-rim-hi), transparent);
+        }
+
+        .landing-footer {
+            font-size: 0.68rem;
+            color: var(--white-ghost);
+            letter-spacing: 0.12em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="landing-wrap">
+
+    <div class="landing-brand">
+        <div class="landing-kgb-icon">KGB</div>
+        <h1>Enterprise Intelligence</h1>
+        <p>Knowledge Graph Builder · System Gateway</p>
+    </div>
+
+    <div class="portal-grid">
+
+        <a href="/user-login" class="portal-card user">
+            <div class="portal-icon">💬</div>
+            <div>
+                <div class="portal-label">For users</div>
+                <div class="portal-title">Customer Support</div>
+            </div>
+            <div class="portal-desc">
+                Report a technical issue with your device or software. Track the status of your tickets in real-time as the AI processes your request.
+            </div>
+            <div class="portal-cta">Sign In / Register →</div>
+        </a>
+
+        <a href="/admin-login" class="portal-card admin">
+            <div class="portal-icon">🛡️</div>
+            <div>
+                <div class="portal-label">For IT Staff</div>
+                <div class="portal-title">Admin Console</div>
+            </div>
+            <div class="portal-desc">
+                Access the Knowledge Graph dashboard, AI agent console, and the human-in-the-loop security queue. Requires authentication.
+            </div>
+            <div class="portal-cta">Enter Admin Console →</div>
+        </a>
+
+    </div>
+
+    <div class="landing-footer">
+        © 2026 KGB · Built by Ansh, Punit &amp; Satwik · All rights reserved
+    </div>
+
+</div>
+
+</body>
+</html>

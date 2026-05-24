@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGB — Customer Support Desk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .support-topbar {
+            width: 100%;
+            background: var(--navy-deep);
+            border-bottom: 1px solid var(--navy-rim);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .support-topbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--amber-dim), transparent);
+        }
+
+        .support-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .support-kgb {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            color: var(--amber);
+            border: 1px solid var(--amber-border);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .support-brand h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .support-brand p {
+            font-size: 0.65rem;
+            color: var(--white-ghost);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .back-link {
+            font-size: 0.75rem;
+            color: var(--white-dim);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--amber); }
+
+        .support-wrap {
+            width: 100%;
+            max-width: 760px;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .panel {
+            background: var(--navy-deep);
+            border: 1px solid var(--navy-rim-hi);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .panel-hd {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--navy-rim);
+            font-family: 'Syne', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--white-dim);
+        }
+
+        .panel-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field-group label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--white-dim);
+        }
+
+        .field-group input,
+        .field-group textarea {
+            background: rgba(10,18,37,0.8);
+            border: 1px solid var(--navy-rim-hi);
+            border-radius: 6px;
+            padding: 12px 16px;
+            color: var(--white);
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 300;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            resize: vertical;
+        }
+
+        .field-group input:focus,
+        .field-group textarea:focus {
+            border-color: rgba(52,211,153,0.4);
+            box-shadow: 0 0 0 3px rgba(52,211,153,0.08);
+        }
+
+        .submit-btn {
+            background: #34d399;
+            color: var(--midnight);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            padding: 13px 28px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            align-self: flex-start;
+        }
+
+        .submit-btn:hover {
+            background: #6ee7b7;
+            transform: translateY(-1px);
+            box-shadow: 0 0 20px rgba(52,211,153,0.2);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Ticket list */
+        .ticket-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px 24px;
+        }
+
+        .ticket-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 16px;
+            background: rgba(10,18,37,0.5);
+            border: 1px solid var(--navy-rim);
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        .ticket-row.resolved { border-color: rgba(52,211,153,0.25); }
+        .ticket-row.pending  { border-color: rgba(245,166,35,0.2); }
+        .ticket-row.rejected { border-color: rgba(248,113,113,0.2); }
+
+        .ticket-status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 6px;
+        }
+
+        .ticket-status-dot.analyzing { background: #60a5fa; box-shadow: 0 0 8px #60a5fa; animation: pulse 1.5s infinite; }
+        .ticket-status-dot.pending   { background: var(--amber); }
+        .ticket-status-dot.resolved  { background: #34d399; }
+        .ticket-status-dot.rejected  { background: #f87171; }
+
+        @keyframes pulse {
+            0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+        }
+
+        .ticket-info { flex: 1; min-width: 0; }
+
+        .ticket-id {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--white-ghost);
+            margin-bottom: 2px;
+        }
+
+        .ticket-device {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--white);
+            margin-bottom: 2px;
+        }
+
+        .ticket-issue {
+            font-size: 0.78rem;
+            color: var(--white-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ticket-status-label {
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            padding: 3px 9px;
+            border-radius: 30px;
+        }
+
+        .ticket-status-label.analyzing { color: #60a5fa; background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.2); }
+        .ticket-status-label.pending   { color: var(--amber); background: var(--amber-trace); border: 1px solid var(--amber-border); }
+        .ticket-status-label.resolved  { color: #34d399; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2); }
+        .ticket-status-label.rejected  { color: #f87171; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.2); }
+
+        .resolution-snippet {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: rgba(52,211,153,0.05);
+            border: 1px solid rgba(52,211,153,0.15);
+            border-radius: 5px;
+            font-size: 0.78rem;
+            color: var(--white-dim);
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px;
+            color: var(--white-ghost);
+            font-size: 0.82rem;
+        }
+
+        .success-toast {
+            display: none;
+            padding: 12px 18px;
+            background: rgba(52,211,153,0.1);
+            border: 1px solid rgba(52,211,153,0.3);
+            border-radius: 6px;
+            color: #34d399;
+            font-size: 0.82rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="support-topbar">
+    <div class="support-brand">
+        <div class="support-kgb">KGB</div>
+        <div>
+            <h1>Customer Support Desk</h1>
+            <p>IT Issue Reporting Portal</p>
+        </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+        <span style="font-size:0.75rem;color:var(--white-dim);">👤 {{ user_name }}</span>
+        <a href="/user-logout" style="font-size:0.72rem;color:var(--white-ghost);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#34d399'" onmouseout="this.style.color='var(--white-ghost)'">Sign Out</a>
+    </div>
+</div>
+
+<div class="support-wrap">
+
+    <!-- Submission Form -->
+    <div class="panel">
+        <div class="panel-hd">Submit a Support Ticket</div>
+        <div class="panel-body">
+            <div class="field-group">
+                <label>Device / Software Name</label>
+                <input type="text" id="deviceInput" placeholder="e.g. Dell Laptop, Outlook 2021, VPN Client…">
+            </div>
+            <div class="field-group">
+                <label>Describe the Issue</label>
+                <textarea id="issueInput" rows="4" placeholder="Describe what's happening, any error messages, and when it started…"></textarea>
+            </div>
+            <div id="successToast" class="success-toast">
+                ✓ Ticket submitted! AI is analyzing your issue. Check the tracker below.
+            </div>
+            <button class="submit-btn" id="submitBtn" onclick="submitTicket()">
+                ➤ &nbsp;Submit Ticket
+            </button>
+        </div>
+    </div>
+
+    <!-- Status Tracker -->
+    <div class="panel">
+        <div class="panel-hd">My Tickets — Status Tracker</div>
+        <div class="ticket-list" id="ticketList">
+            <div class="empty-state">No tickets yet. Submit your first issue above.</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // user_email comes from Flask session — permanent identifier for this user
+    const USER_EMAIL = "{{ user_email }}";
+
+    // localTickets is a write-ahead cache for instant UI feedback.
+    // The server (MongoDB) is the real source of truth.
+    let localTickets = [];
+    let pollInterval = null;
+
+    // ── INIT: load tickets from server on page load ──────────────────────────
+    async function initTickets() {
+        try {
+            const res = await fetch('/api/tickets');
+            const serverTickets = await res.json();
+            localTickets = serverTickets;
+            renderTickets();
+            // Start polling if any ticket is unresolved
+            if (localTickets.some(t => isUnresolved(t))) startPolling();
+        } catch(e) {
+            console.error('Init tickets error:', e);
+        }
+    }
+
+    // ── SUBMIT ───────────────────────────────────────────────────────────────
+    async function submitTicket() {
+        const device = document.getElementById('deviceInput').value.trim();
+        const issue  = document.getElementById('issueInput').value.trim();
+        if (!device || !issue) { alert('Please fill in both fields.'); return; }
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = 'Submitting…';
+
+        try {
+            const ingestRes = await fetch('/api/ingest', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ device, issue, user_email: USER_EMAIL })
+            });
+            const ingestData = await ingestRes.json();
+            const ticketId = ingestData.ticket_id;
+
+            // Optimistic insert — shows instantly before AI finishes
+            localTickets.unshift({ id: ticketId, device, issue: issue.substring(0, 80), status: 'AI Analyzing', resolution: null });
+            renderTickets();
+
+            document.getElementById('successToast').style.display = 'block';
+            document.getElementById('deviceInput').value = '';
+            document.getElementById('issueInput').value = '';
+
+            triggerAI(ticketId, device, issue);
+            startPolling();
+
+        } catch(e) {
+            alert('Error submitting ticket. Please try again.');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '➤  Submit Ticket';
+        }
+    }
+
+    // ── AI PIPELINE ──────────────────────────────────────────────────────────
+    async function triggerAI(ticketId, device, issue) {
+        try {
+            const query = `Device: ${device}. Issue: ${issue}`;
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query, ticket_id: ticketId })
+            });
+            const data = await res.json();
+
+            const t = localTickets.find(t => t.id === ticketId);
+            if (t) {
+                if (data.status === 'Pending_Human_Review') {
+                    t.status = 'Pending Admin Review';
+                    t.resolution = null;
+                } else {
+                    t.status = 'Resolved';
+                    t.resolution = data.response;
+                }
+                renderTickets();
+            }
+        } catch(e) {
+            console.error('AI pipeline error:', e);
+        }
+    }
+
+    // ── POLLING ──────────────────────────────────────────────────────────────
+    function isUnresolved(t) {
+        const s = (t.status || '').toLowerCase();
+        return s.includes('analyzing') || s.includes('pending');
+    }
+
+    function startPolling() {
+        if (pollInterval) return;
+        pollInterval = setInterval(syncFromServer, 5000);
+    }
+
+    function stopPolling() {
+        if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+    }
+
+    async function syncFromServer() {
+        if (!localTickets.some(isUnresolved)) { stopPolling(); return; }
+        try {
+            const res = await fetch('/api/tickets');
+            const serverTickets = await res.json();
+            let changed = false;
+            serverTickets.forEach(srv => {
+                const local = localTickets.find(l => l.id === srv.id);
+                if (local) {
+                    if (local.status !== srv.status || local.resolution !== srv.resolution) {
+                        local.status     = srv.status;
+                        local.resolution = srv.resolution || local.resolution;
+                        changed = true;
+                    }
+                }
+            });
+            if (changed) renderTickets();
+        } catch(e) { console.error('Poll error:', e); }
+    }
+
+    // ── RENDER ────────────────────────────────────────────────────────────────
+    function getStatusClass(status) {
+        if (!status) return 'analyzing';
+        const s = status.toLowerCase();
+        if (s.includes('resolv'))                    return 'resolved';
+        if (s.includes('pending') || s.includes('review')) return 'pending';
+        if (s.includes('reject'))                    return 'rejected';
+        return 'analyzing';
+    }
+
+    function renderTickets() {
+        const list = document.getElementById('ticketList');
+        if (localTickets.length === 0) {
+            list.innerHTML = '<div class="empty-state">No tickets yet. Submit your first issue above.</div>';
+            return;
+        }
+
+        const labelMap = { analyzing: 'AI Analyzing', pending: 'Pending Review', resolved: 'Resolved', rejected: 'Rejected' };
+
+        list.innerHTML = localTickets.map(t => {
+            const cls = getStatusClass(t.status);
+
+            let resolutionHtml = '';
+            if (t.resolution && cls === 'resolved') {
+                resolutionHtml = `
+                    <div class="resolution-snippet">
+                        <strong style="color:#34d399;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;">✓ Resolution</strong><br><br>
+                        ${t.resolution.replace(/\n/g, '<br>')}
+                    </div>`;
+            } else if (cls === 'rejected' && t.resolution) {
+                resolutionHtml = `
+                    <div class="resolution-snippet" style="border-color:rgba(248,113,113,0.2);background:rgba(248,113,113,0.05);">
+                        <strong style="color:#f87171;font-size:0.72rem;">✗ &nbsp;</strong>${t.resolution}
+                    </div>`;
+            } else if (cls === 'pending') {
+                resolutionHtml = `
+                    <div style="margin-top:8px;font-size:0.74rem;color:var(--white-ghost);">
+                        ⏳ &nbsp;Under review by an IT admin. You'll see the resolution here once approved.
+                    </div>`;
+            }
+
+            return `
+                <div class="ticket-row ${cls}" id="tr-${t.id}">
+                    <div class="ticket-status-dot ${cls}"></div>
+                    <div class="ticket-info">
+                        <div class="ticket-id">TICKET #${t.id}</div>
+                        <div class="ticket-device">${t.device}</div>
+                        <div class="ticket-issue">${t.issue}</div>
+                        ${resolutionHtml}
+                    </div>
+                    <div class="ticket-status-label ${cls}">${labelMap[cls] || t.status}</div>
+                </div>`;
+        }).join('');
+    }
+
+    // Kick off
+    initTickets();
+</script>
+</body>
+</html>
