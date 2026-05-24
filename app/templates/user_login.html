@@ -298,11 +298,17 @@
         document.getElementById('registerForm').style.display = tab === 'register' ? '' : 'none';
     }
 
-    // If there's an error on register action, keep register tab open
-    {% if error %}
-    const urlParams = new URLSearchParams(window.location.search);
-    // Check the last submitted form action via referrer heuristic — just stay on login by default
-    {% endif %}
+    // Auto-open the register tab if the error came from a register attempt
+    // We detect this by checking which hidden action field was submitted
+    const lastAction = sessionStorage.getItem('kgb_last_auth_action') || 'login';
+    if (lastAction === 'register') switchTab('register');
+
+    document.getElementById('loginForm').addEventListener('submit', () => {
+        sessionStorage.setItem('kgb_last_auth_action', 'login');
+    });
+    document.getElementById('registerForm').addEventListener('submit', () => {
+        sessionStorage.setItem('kgb_last_auth_action', 'register');
+    });
 </script>
 
 </body>
